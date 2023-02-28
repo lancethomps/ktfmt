@@ -43,7 +43,6 @@ public class KtfmtConfigurable extends BaseConfigurable implements SearchableCon
   private JPanel panel;
   private JCheckBox enable;
   private JComboBox styleComboBox;
-  private JTextField textField1;
   private JTextField maxWidth;
 
   public KtfmtConfigurable(Project project) {
@@ -124,7 +123,6 @@ public class KtfmtConfigurable extends BaseConfigurable implements SearchableCon
 
   private void createUIComponents() {
     styleComboBox = new ComboBox<>(UiFormatterStyle.values());
-    maxWidth = new JTextField();
   }
 
   {

@@ -43,7 +43,7 @@
           <text value="Max Width"/>
         </properties>
       </component>
-      <component id="d218d" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+      <component id="d218d" class="javax.swing.JTextField" binding="maxWidth">
         <constraints>
           <grid row="2" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="1" use-parent-layout="false"/>
         </constraints>

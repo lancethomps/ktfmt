@@ -16,6 +16,7 @@
 
 package com.facebook.ktfmt.intellij;
 
+import com.facebook.ktfmt.format.FormattingOptions;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
@@ -69,6 +70,29 @@ class KtfmtSettings implements PersistentStateComponent<KtfmtSettings.State> {
     state.uiFormatterStyle = uiFormatterStyle;
   }
 
+  Integer getMaxWidth() {
+    return state.maxWidth;
+  }
+
+  void setMaxWidth(Integer maxWidth) {
+    state.maxWidth = maxWidth;
+  }
+
+  FormattingOptions createFormattingOptions() {
+    FormattingOptions options = state.uiFormatterStyle.getFormattingOptions();
+    if (state.maxWidth != null) {
+      options =
+          options.copy(
+              options.getStyle(),
+              state.maxWidth,
+              options.getBlockIndent(),
+              options.getContinuationIndent(),
+              options.getRemoveUnusedImports(),
+              options.getDebuggingPrintOpsAfterFormatting());
+    }
+    return options;
+  }
+
   enum EnabledState {
     UNKNOWN,
     ENABLED,
@@ -79,6 +103,7 @@ class KtfmtSettings implements PersistentStateComponent<KtfmtSettings.State> {
 
     private EnabledState enabled = EnabledState.UNKNOWN;
     public UiFormatterStyle uiFormatterStyle = UiFormatterStyle.DEFAULT;
+    public Integer maxWidth;
 
     // enabled used to be a boolean so we use bean property methods for backwards
     // compatibility

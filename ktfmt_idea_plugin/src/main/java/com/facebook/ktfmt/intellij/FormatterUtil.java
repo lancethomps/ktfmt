@@ -18,6 +18,7 @@ package com.facebook.ktfmt.intellij;
 
 import static com.facebook.ktfmt.format.Formatter.format;
 
+import com.facebook.ktfmt.format.FormattingOptions;
 import com.facebook.ktfmt.format.ParseError;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
@@ -34,18 +35,18 @@ final class FormatterUtil {
    *
    * @return formatted code
    */
-  static Map<TextRange, String> getReplacements(UiFormatterStyle uiFormatterStyle, String code) {
+  static Map<TextRange, String> getReplacements(FormattingOptions formattingOptions, String code) {
     try {
-      return ImmutableMap.of(TextRange.allOf(code), formatCode(uiFormatterStyle, code));
+      return ImmutableMap.of(TextRange.allOf(code), formatCode(formattingOptions, code));
     } catch (FormatterException | ParseError e) {
       return ImmutableMap.of();
     }
   }
 
   @VisibleForTesting
-  static String formatCode(UiFormatterStyle uiFormatterStyle, String code)
+  static String formatCode(FormattingOptions formattingOptions, String code)
       throws FormatterException {
 
-    return format(uiFormatterStyle.getFormattingOptions(), code);
+    return format(formattingOptions, code);
   }
 }

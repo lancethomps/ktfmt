@@ -18,6 +18,7 @@ package com.facebook.ktfmt.intellij;
 
 import static java.util.Comparator.comparing;
 
+import com.facebook.ktfmt.format.FormattingOptions;
 import com.google.common.collect.ImmutableList;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -125,11 +126,11 @@ class KtfmtCodeStyleManager extends CodeStyleManagerDecorator {
    * formatter (usually using {@link #performReplacements(Document, Map)}.
    */
   private void format(Document document, Collection<TextRange> ranges) {
-    UiFormatterStyle uiFormatterStyle =
-        KtfmtSettings.getInstance(getProject()).getUiFormatterStyle();
+    FormattingOptions formattingOptions =
+        KtfmtSettings.getInstance(getProject()).createFormattingOptions();
 
     performReplacements(
-        document, FormatterUtil.getReplacements(uiFormatterStyle, document.getText()));
+        document, FormatterUtil.getReplacements(formattingOptions, document.getText()));
   }
 
   private void performReplacements(

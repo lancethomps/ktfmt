@@ -26,11 +26,13 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import java.awt.Insets;
+import java.util.Objects;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,6 +43,8 @@ public class KtfmtConfigurable extends BaseConfigurable implements SearchableCon
   private JPanel panel;
   private JCheckBox enable;
   private JComboBox styleComboBox;
+  private JTextField textField1;
+  private JTextField maxWidth;
 
   public KtfmtConfigurable(Project project) {
     this.project = project;
@@ -81,6 +85,7 @@ public class KtfmtConfigurable extends BaseConfigurable implements SearchableCon
     KtfmtSettings settings = KtfmtSettings.getInstance(project);
     settings.setEnabled(enable.isSelected() ? EnabledState.ENABLED : getDisabledState());
     settings.setUiFormatterStyle(((UiFormatterStyle) styleComboBox.getSelectedItem()));
+    settings.setMaxWidth(parseMaxWidth());
   }
 
   private EnabledState getDisabledState() {
@@ -91,18 +96,27 @@ public class KtfmtConfigurable extends BaseConfigurable implements SearchableCon
     return project.isDefault() ? EnabledState.UNKNOWN : EnabledState.DISABLED;
   }
 
+  private Integer parseMaxWidth() {
+    if (maxWidth.getText() == null || maxWidth.getText().isBlank()) {
+      return null;
+    }
+    return Integer.valueOf(maxWidth.getText());
+  }
+
   @Override
   public void reset() {
     KtfmtSettings settings = KtfmtSettings.getInstance(project);
     enable.setSelected(settings.isEnabled());
     styleComboBox.setSelectedItem(settings.getUiFormatterStyle());
+    maxWidth.setText(settings.getMaxWidth() == null ? "" : settings.getMaxWidth().toString());
   }
 
   @Override
   public boolean isModified() {
     KtfmtSettings settings = KtfmtSettings.getInstance(project);
     return enable.isSelected() != settings.isEnabled()
-        || !styleComboBox.getSelectedItem().equals(settings.getUiFormatterStyle());
+        || !styleComboBox.getSelectedItem().equals(settings.getUiFormatterStyle())
+        || !Objects.equals(parseMaxWidth(), settings.getMaxWidth());
   }
 
   @Override
@@ -110,6 +124,7 @@ public class KtfmtConfigurable extends BaseConfigurable implements SearchableCon
 
   private void createUIComponents() {
     styleComboBox = new ComboBox<>(UiFormatterStyle.values());
+    maxWidth = new JTextField();
   }
 
   {
@@ -184,6 +199,40 @@ public class KtfmtConfigurable extends BaseConfigurable implements SearchableCon
             false));
     panel.add(
         styleComboBox,
+        new GridConstraints(
+            1,
+            1,
+            1,
+            1,
+            GridConstraints.ANCHOR_WEST,
+            GridConstraints.FILL_HORIZONTAL,
+            GridConstraints.SIZEPOLICY_CAN_GROW,
+            GridConstraints.SIZEPOLICY_FIXED,
+            null,
+            null,
+            null,
+            1,
+            false));
+    final JLabel label2 = new JLabel();
+    label2.setText("Max Width");
+    panel.add(
+        label2,
+        new GridConstraints(
+            1,
+            0,
+            1,
+            1,
+            GridConstraints.ANCHOR_WEST,
+            GridConstraints.FILL_NONE,
+            GridConstraints.SIZEPOLICY_FIXED,
+            GridConstraints.SIZEPOLICY_FIXED,
+            null,
+            null,
+            null,
+            0,
+            false));
+    panel.add(
+        maxWidth,
         new GridConstraints(
             1,
             1,

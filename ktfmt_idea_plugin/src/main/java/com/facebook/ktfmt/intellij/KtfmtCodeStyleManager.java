@@ -58,7 +58,7 @@ class KtfmtCodeStyleManager extends CodeStyleManagerDecorator {
   }
 
   @Override
-  public void reformatText(PsiFile file, Collection<TextRange> ranges)
+  public void reformatText(PsiFile file, Collection<? extends TextRange> ranges)
       throws IncorrectOperationException {
     if (overrideFormatterForFile(file)) {
       formatInternal(file, ranges);
@@ -68,7 +68,8 @@ class KtfmtCodeStyleManager extends CodeStyleManagerDecorator {
   }
 
   @Override
-  public void reformatTextWithContext(PsiFile file, Collection<TextRange> ranges) {
+  public void reformatTextWithContext(
+      @NotNull PsiFile file, @NotNull Collection<? extends TextRange> ranges) {
     if (overrideFormatterForFile(file)) {
       formatInternal(file, ranges);
     } else {
@@ -99,7 +100,7 @@ class KtfmtCodeStyleManager extends CodeStyleManagerDecorator {
         && KtfmtSettings.getInstance(getProject()).isEnabled();
   }
 
-  private void formatInternal(PsiFile file, Collection<TextRange> ranges) {
+  private void formatInternal(PsiFile file, Collection<? extends TextRange> ranges) {
     ApplicationManager.getApplication().assertWriteAccessAllowed();
     PsiDocumentManager documentManager = PsiDocumentManager.getInstance(getProject());
     documentManager.commitAllDocuments();
@@ -125,7 +126,7 @@ class KtfmtCodeStyleManager extends CodeStyleManagerDecorator {
    * <p>Overriding methods will need to modify the document with the result of the external
    * formatter (usually using {@link #performReplacements(Document, Map)}.
    */
-  private void format(Document document, Collection<TextRange> ranges) {
+  private void format(Document document, Collection<? extends TextRange> ranges) {
     FormattingOptions formattingOptions =
         KtfmtSettings.getInstance(getProject()).createFormattingOptions();
 

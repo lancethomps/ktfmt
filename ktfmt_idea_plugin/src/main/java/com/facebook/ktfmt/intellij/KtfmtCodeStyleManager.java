@@ -27,10 +27,13 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.codeStyle.ChangedRangesInfo;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.impl.CheckUtil;
 import com.intellij.util.IncorrectOperationException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -68,8 +71,18 @@ class KtfmtCodeStyleManager extends CodeStyleManagerDecorator {
   }
 
   @Override
-  public void reformatTextWithContext(
-      @NotNull PsiFile file, @NotNull Collection<? extends TextRange> ranges) {
+  public void reformatTextWithContext(@NotNull PsiFile file, @NotNull ChangedRangesInfo info)
+      throws IncorrectOperationException {
+    List<TextRange> ranges = new ArrayList<>();
+    if (info.insertedRanges != null) {
+      ranges.addAll(info.insertedRanges);
+    }
+    ranges.addAll(info.allChangedRanges);
+    reformatTextWithContext(file, ranges);
+  }
+
+  @Override
+  public void reformatTextWithContext(PsiFile file, Collection<? extends TextRange> ranges) {
     if (overrideFormatterForFile(file)) {
       formatInternal(file, ranges);
     } else {

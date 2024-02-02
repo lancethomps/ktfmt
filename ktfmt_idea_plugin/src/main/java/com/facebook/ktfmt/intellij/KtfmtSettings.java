@@ -88,7 +88,8 @@ class KtfmtSettings implements PersistentStateComponent<KtfmtSettings.State> {
               options.getBlockIndent(),
               options.getContinuationIndent(),
               options.getRemoveUnusedImports(),
-              options.getDebuggingPrintOpsAfterFormatting());
+              options.getDebuggingPrintOpsAfterFormatting(),
+              options.getManageTrailingCommas());
     }
     return options;
   }

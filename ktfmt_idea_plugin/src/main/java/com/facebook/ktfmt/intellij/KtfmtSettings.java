@@ -80,17 +80,15 @@ class KtfmtSettings implements PersistentStateComponent<KtfmtSettings.State> {
 
   FormattingOptions createFormattingOptions() {
     FormattingOptions options = state.uiFormatterStyle.getFormattingOptions();
-    if (state.maxWidth != null) {
-      options =
-          options.copy(
-              options.getStyle(),
-              state.maxWidth,
-              options.getBlockIndent(),
-              options.getContinuationIndent(),
-              options.getRemoveUnusedImports(),
-              options.getDebuggingPrintOpsAfterFormatting(),
-              options.getManageTrailingCommas());
-    }
+    options =
+        options.copy(
+            options.getStyle(),
+            state.maxWidth != null ? state.maxWidth : options.getMaxWidth(),
+            options.getBlockIndent(),
+            options.getContinuationIndent(),
+            options.getRemoveUnusedImports(),
+            options.getDebuggingPrintOpsAfterFormatting(),
+            false);
     return options;
   }
 
